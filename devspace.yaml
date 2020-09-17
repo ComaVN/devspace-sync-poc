@@ -1,0 +1,21 @@
+version: v1beta9
+images:
+  foo:
+    dockerfile: Dockerfile
+    image: dockerregistry.example.com/rh-devspace-sync-poc
+    injectRestartHelper: true
+    tags:
+      - dev-${DEVSPACE_USERNAME}-${DEVSPACE_RANDOM}
+deployments:
+  - name: dev
+    kubectl:
+      replaceImageTags: true
+      manifests:
+        - deployment.yaml
+dev:
+  sync:
+    - imageName: foo
+      localSubPath: ./foo
+      containerPath: /foo
+      onUpload:
+        restartContainer: true
